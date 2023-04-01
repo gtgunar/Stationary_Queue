@@ -1,10 +1,10 @@
 #ifndef STATIONARY_QUEUE_H
 #define STATIONARY_QUEUE_H
 #include<vector>
-#include<deque>//only for debugging
-#include<iostream>//only for debugging
-#include<cstdlib>//only for debugging
-#include<chrono>//only for debugging
+//#include<deque>//only for debugging
+//#include<iostream>//only for debugging
+//#include<cstdlib>//only for debugging
+//#include<chrono>//only for debugging
 
 using namespace std;
 
@@ -15,15 +15,14 @@ namespace StationaryQueue
         {
         private:
 
-            short int size;
             short int offset;
             vector<T>* data;
 
         public:
 
-            SQ(int _size):size(_size),offset(_size/2)//offset:arbitrary, might find better
+            SQ(int _size):offset(_size/2)//offset:arbitrary, might find better
                 {data=new vector<T>(_size);}
-            SQ(const SQ& x, int _size):size(_size),offset(offset/2)//might end up using resize instead
+            SQ(const SQ& x, int _size):offset(_size/2)//might end up using resize instead
                 {
                 data=new vector<T>(_size);
                 for(int i=0;i<x.size();i++)
@@ -32,11 +31,11 @@ namespace StationaryQueue
 
             T& access(int index)//random access
                 {
-                int eltoltHely=index+offset;
-                if( eltoltHely >= size )
-                    {return data->at(eltoltHely  -size) ;}
+                int ShiftedPlace=index+offset;
+                if( ShiftedPlace >= data->size() )
+                    {return data->at(ShiftedPlace  -data->size()) ;}
                 else
-                    {return data->at(eltoltHely       ) ;}
+                    {return data->at(ShiftedPlace       ) ;}
                 }
             
             T placing(T x)//combied popfront,pushback
@@ -45,7 +44,7 @@ namespace StationaryQueue
                 swap(temp, access(0));//temp holds the old value now
 
                 offset++;
-                offset%=size;
+                offset%=data->size();
 
                 return temp;
                 }
@@ -53,10 +52,10 @@ namespace StationaryQueue
             T revplace(T x)//combied popfront,pushback
                 {
                 T temp=x;
-                swap(temp, access(size-1));//temp holds the old value now
+                swap(temp, access(data->size()-1));//temp holds the old value now
 
-                offset+=size-1;
-                offset%=size;
+                offset+=data->size()-1;
+                offset%=data->size();
 
                 return temp;
                 }
@@ -64,10 +63,10 @@ namespace StationaryQueue
 
             ~SQ(){delete data;}
             //debug:
-            void log()
+            /*void log()
                 {
                 cout<<"/////////////////////////////////"<<endl;
-                cout<<"storedSize: "<<size<<" vectorsize: "<<data->size()<<" offset: "<<offset<<endl;
+                cout<<" vectorsize: "<<data->size()<<" offset: "<<offset<<endl;
                 cout<<"raw elements:"<<endl;
                 for(int i=0;i<data->size();i++)
                     {cout<<(*data)[i]<<", ";}
@@ -76,10 +75,11 @@ namespace StationaryQueue
                 for(int i=0;i<data->size();i++)
                     {cout<<access(i)<<", ";}
                 cout<<endl<<"|///////////////////////////////|"<<endl;
-                }
+                }*/
 
         };
     
+    /*Testing utilities
     void neqWarn(float a,float b)
         {
         if(a!=b)
@@ -139,13 +139,13 @@ namespace StationaryQueue
     void bigTest(int meret)//passed
         {
         cout<<"test started"<<endl;
-        for(int i=meret;meret;i--)
+        for(int i=1;i<meret;i++)
             {
             for(int j=0;j<100;j++)
                 {test(i);}
             cout<<i<<", ";
             }
         cout<<endl<<"test done"<<endl;
-        }
+        }*/
     }
 #endif
